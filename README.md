@@ -17,9 +17,6 @@ Click the "Get Exchange Rate" button to see the converted amount.
 ![CSS3](https://img.shields.io/badge/-CSS3-1572B6?logo=css3&logoColor=white&style=flat)
 ![JavaScript](https://img.shields.io/badge/-JavaScript-F7DF1E?logo=javascript&logoColor=black&style=flat)
 
-## Screenshot
-![Currency Converter Screenshot](./screenshot.png)
-
 ## License
 This project is licensed under the [MIT License](LICENSE).
 
