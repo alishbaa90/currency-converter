@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currency Converter</title>
+    <style>
+        body {
+            background-color: rgb(180, 152, 116);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .card {
+            height: 75vh;
+            width: 75vh;
+            background-color: white;
+            border-radius: 20px;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .card h1 {
+            font-size: 33px;
+            text-align: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin-top: -10px;
+        }
+        .card p {
+            font-size: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin-bottom: 10px;
+        }
+        .card input {
+            height: 35px;
+            width: calc(100% - 60px);
+            border-radius: 20px;
+            border: 1px solid black;
+            margin-bottom: 40px;
+            padding: 0 10px;
+            font-size: 16px;
+        }
+        .converter {
+            display: flex;
+            align-items: center;
+        }
+        .from, .to {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0 10px;
+        }
+        .currency-selector {
+            display: flex;
+            align-items: center;
+        }
+        .currency-selector img {
+            height: 40px;
+            width: 40px;
+            margin-right: 10px;
+        }
+        .from p, .to p {
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+        .from select, .to select {
+            height: 40px;
+            width: 80px;
+            background-color: rgb(180, 152, 116);
+            color: white;
+            border: none;
+            border-radius: 7px;
+            font-size: 17px;
+        }
+        .cimg img {
+            height: 50px;
+            width: 50px;
+            margin: 0 20px;
+        }
+        button {
+            height: 45px;
+            width: 300px;
+            border-radius: 10px;
+            border: none;
+            background-color: rgb(143, 121, 95);
+            margin-top: 50px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 18px;
+            color: white;
+        }
+        button:hover {
+            background-color: rgb(97, 82, 65);
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .msg {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 25px;
+            margin-top: 24px;
+        }
+        .currency-selector {
+            height: 45px;
+            background-color: rgb(180, 152, 116);
+            border-radius: 10px;
+            width: 120px;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>CURRENCY CONVERTER</h1>
+        <p>Enter Amount</p>
+        <input type="number" id="amount" placeholder="Enter amount">
+        <div class="converter">
+            <div class="from">
+                <p>From</p>
+                <div class="currency-selector">
+                    <img id="fromFlag" src="https://flagsapi.com/US/flat/64.png" alt="From Flag">
+                    <select id="fromCurrency" onchange="updateFlag('from')">
+                        <option value="USD">USD</option>
+                        <option value="PKR">PKR</option>
+                        <option value="EUR">EUR</option>
+                        <option value="AUD">AUD</option>
+                    </select>
+                </div>
+            </div>
+            <div class="cimg">
+                <img src="images/convert.png" alt="Convert">
+            </div>
+            <div class="to">
+                <p>To</p>
+                <div class="currency-selector">
+                    <img id="toFlag" src="https://flagsapi.com/PK/flat/64.png" alt="To Flag">
+                    <select id="toCurrency" onchange="updateFlag('to')">
+                        <option value="USD">USD</option>
+                        <option value="PKR" selected>PKR</option>
+                        <option value="EUR">EUR</option>
+                        <option value="AUD">AUD</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="msg" id="result">1 USD = 278.70 PKR</div>
+        <button onclick="convertCurrency()">Get Exchange Rate</button>
+    </div>
+
+    <script>
+        const exchangeRates = {
+            USD: { USD: 1, PKR: 278.70, EUR: 0.92, AUD: 1.52 },
+            PKR: { USD: 0.0036, PKR: 1, EUR: 0.0033, AUD: 0.0055 },
+            EUR: { USD: 1.09, PKR: 303.26, EUR: 1, AUD: 1.65 },
+            AUD: { USD: 0.66, PKR: 183.55, EUR: 0.61, AUD: 1 },
+        };
+
+        function updateFlag(type) {
+            const currency = document.getElementById(`${type}Currency`).value;
+            const flagImg = document.getElementById(`${type}Flag`);
+            flagImg.src = `https://flagsapi.com/${getCountryCode(currency)}/flat/64.png`;
+        }
+
+        function getCountryCode(currency) {
+            const countryCodes = {
+                USD: "US", 
+                PKR: "PK", 
+                EUR: "DE",
+                AUD: "AU", 
+            };
+            return countryCodes[currency] || "US"; 
+        }
+
+        function convertCurrency() {
+            const amount = parseFloat(document.getElementById('amount').value);
+            const fromCurrency = document.getElementById('fromCurrency').value;
+            const toCurrency = document.getElementById('toCurrency').value;
+
+            if (isNaN(amount)) {
+                alert("Please enter a valid amount.");
+                return;
+            }
+
+            const rate = exchangeRates[fromCurrency][toCurrency];
+            const convertedAmount = (amount * rate).toFixed(2);
+
+            document.getElementById('result').innerText = `${amount} ${fromCurrency} = ${convertedAmount} ${toCurrency}`;
+        }
+
+        // Initialize flags on page load
+        updateFlag('from');
+        updateFlag('to');
+    </script>
+</body>
+</html>
